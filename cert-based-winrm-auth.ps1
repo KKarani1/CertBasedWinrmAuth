@@ -16,13 +16,13 @@ Set-Item -Path WSMan:\localhost\Service\Auth\Certificate -Value $true
 $output_path = 'D:\EPV_APPS\Deployment\winrm_setup'
 
 $UserAccountName = 'ansibleuser'
-$testUserAccountPassword = (ConvertTo-SecureString -String 'p@$$w0rd12' -AsPlainText -Force)
+$UserAccountPassword = (ConvertTo-SecureString -String 'p@$$w0rd12' -AsPlainText -Force)
 if (-not (Get-LocalUser -Name $UserAccountName -ErrorAction Ignore)) {
     $newUserParams = @{
         Name                 = $UserAccountName
         AccountNeverExpires  = $true
         PasswordNeverExpires = $true
-        Password             = $testUserAccountPassword
+        Password             = $UserAccountPassword
     }
     $null = New-LocalUser @newUserParams
 }
@@ -71,7 +71,7 @@ if ((-not $httpsListeners) -or -not (@($httpsListeners).where( { $_.CertificateT
 #endregion
 
 #region Map the client cert
-$credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $UserAccountName, $testUserAccountPassword
+$credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $UserAccountName, $UserAccountPassword
 
 New-Item -Path WSMan:\localhost\ClientCertificate `
     -Subject "$UserAccountName@localhost" `
