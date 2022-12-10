@@ -37,10 +37,10 @@ distinguished_name = req_distinguished_name
 [req_distinguished_name]
 [v3_req_client]
 extendedKeyUsage = clientAuth
-subjectAltName = otherName:1.3.6.1.4.1.311.20.2.3;UTF8:$USERNAME@localhost
+subjectAltName = otherName:1.3.6.1.4.1.311.20.2.3;UTF8:ansibleuser@localhost
 EOL
 export OPENSSL_CONF=openssl.conf
-openssl req -x509 -nodes -days 3650 -newkey rsa:2048 -out cert.pem -outform PEM -keyout cert_key.pem -subj "/CN=$USERNAME" -extensions v3_req_client
+openssl req -x509 -nodes -days 3650 -newkey rsa:2048 -out cert.pem -outform PEM -keyout cert_key.pem -subj "/CN=ansibleuser" -extensions v3_req_client
 rm openssl.conf 
 #>
 
@@ -50,7 +50,7 @@ $pubKeyFilePath = "C:\cert.pem"
 $null = Import-Certificate -FilePath $pubKeyFilePath -CertStoreLocation 'Cert:\LocalMachine\Root'
 $null = Import-Certificate -FilePath $pubKeyFilePath -CertStoreLocation 'Cert:\LocalMachine\TrustedPeople'
 
-$ansibleCert = Get-ChildItem -Path 'Cert:\LocalMachine\Root' | ? {$_.Subject -eq 'CN=ansibletestuser'}
+$ansibleCert = Get-ChildItem -Path 'Cert:\LocalMachine\Root' | ? {$_.Subject -eq 'CN=ansibleuser'}
 
 #endregion
 
