@@ -15,11 +15,11 @@ Set-Item -Path WSMan:\localhost\Service\Auth\Certificate -Value $true
 
 $output_path = 'D:\EPV_APPS\Deployment\winrm_setup'
 
-$testUserAccountName = 'ansibletestuser'
+$UserAccountName = 'ansibleuser'
 $testUserAccountPassword = (ConvertTo-SecureString -String 'p@$$w0rd12' -AsPlainText -Force)
-if (-not (Get-LocalUser -Name $testUserAccountName -ErrorAction Ignore)) {
+if (-not (Get-LocalUser -Name $UserAccountName -ErrorAction Ignore)) {
     $newUserParams = @{
-        Name                 = $testUserAccountName
+        Name                 = $UserAccountName
         AccountNeverExpires  = $true
         PasswordNeverExpires = $true
         Password             = $testUserAccountPassword
@@ -71,10 +71,10 @@ if ((-not $httpsListeners) -or -not (@($httpsListeners).where( { $_.CertificateT
 #endregion
 
 #region Map the client cert
-$credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $testUserAccountName, $testUserAccountPassword
+$credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $UserAccountName, $testUserAccountPassword
 
 New-Item -Path WSMan:\localhost\ClientCertificate `
-    -Subject "$testUserAccountName@localhost" `
+    -Subject "$UserAccountName@localhost" `
     -URI * `
     -Issuer $ansibleCert.Thumbprint `
     -Credential $credential `
@@ -111,4 +111,4 @@ $null = New-ItemProperty @newItemParams
  #endregion
 
 ## Add the local user to the administrators group. If this step isn't doing, Ansible sees an "AccessDenied" error
-Get-LocalUser -Name $testUserAccountName | Add-LocalGroupMember -Group 'Administrators'
+Get-LocalUser -Name $UserAccountName | Add-LocalGroupMember -Group 'Administrators'
