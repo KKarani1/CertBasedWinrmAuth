@@ -5,6 +5,8 @@ Start-Service -Name "WinRM"
 
 #region Enable PS remoting
 if (-not (Get-PSSessionConfiguration) -or (-not (Get-ChildItem WSMan:\localhost\Listener))) {
+    ## Use SkipNetworkProfileCheck to make available even on Windows Firewall public profiles
+    ## Use Force to not be prompted if we're sure or not.
     Enable-PSRemoting -SkipNetworkProfileCheck -Force
 }
 #endregion
