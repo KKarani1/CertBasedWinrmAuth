@@ -1,2 +1,2 @@
-# cert-based-winrm-auth.ps1
+# CertBasedWinrmAuth 
 To setup Windows for ansible cert based WinRM authentication
