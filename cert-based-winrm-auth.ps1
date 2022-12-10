@@ -15,8 +15,6 @@ if (-not (Get-PSSessionConfiguration) -or (-not (Get-ChildItem WSMan:\localhost\
 Set-Item -Path WSMan:\localhost\Service\Auth\Certificate -Value $true
 #endregion
 
-$output_path = 'D:\EPV_APPS\Deployment\winrm_setup'
-
 $UserAccountName = 'ansibleuser'
 $UserAccountPassword = (ConvertTo-SecureString -String 'p@$$w0rd12' -AsPlainText -Force)
 if (-not (Get-LocalUser -Name $UserAccountName -ErrorAction Ignore)) {
@@ -43,7 +41,7 @@ openssl req -x509 -nodes -days 3650 -newkey rsa:2048 -out cert.pem -outform PEM 
 rm openssl.conf 
 #>
 
-$pubKeyFilePath = "$output_path\pubkey.txt" 
+$pubKeyFilePath = "C:\cert.pem" 
 
 ## Import the public key into Trusted Root Certification Authorities and Trusted People
 $null = Import-Certificate -FilePath $pubKeyFilePath -CertStoreLocation 'Cert:\LocalMachine\Root'
