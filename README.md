@@ -1,2 +1,2 @@
 # CertBasedWinrmAuth 
-To setup Windows for ansible cert based WinRM authentication
+**Purpose:** To setup Windows for ansible cert based WinRM authentication
