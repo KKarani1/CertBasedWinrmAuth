@@ -50,9 +50,6 @@ $pubKeyFilePath = "C:\cert.pem"
 $null = Import-Certificate -FilePath $pubKeyFilePath -CertStoreLocation 'Cert:\LocalMachine\Root'
 $null = Import-Certificate -FilePath $pubKeyFilePath -CertStoreLocation 'Cert:\LocalMachine\TrustedPeople'
 
-$ansibleCert = Get-ChildItem -Path 'Cert:\LocalMachine\Root' | ? {$_.Subject -eq 'CN=ansibleuser'}
-
-#endregion
 
 #region Create the "server" cert for the Windows server and listener
 # $hostName = "$env:COMPUTERNAME.$env:USERDNSDOMAIN"
@@ -71,6 +68,10 @@ if ((-not $httpsListeners) -or -not (@($httpsListeners).where( { $_.CertificateT
     }
     $null = New-WSManInstance @newWsmanParams
 }
+#endregion
+
+$ansibleCert = Get-ChildItem -Path 'Cert:\LocalMachine\Root' | ? {$_.Subject -eq 'CN=ansibleuser'}
+
 #endregion
 
 #region Map the client cert
