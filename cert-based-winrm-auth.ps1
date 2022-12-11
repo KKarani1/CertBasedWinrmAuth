@@ -73,20 +73,21 @@ if ((-not $httpsListeners) -or -not (@($httpsListeners).where( { $_.CertificateT
 }
 #endregion
 
-
-
 #region Map the client cert
 $credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $UserAccountName, $UserAccountPassword
 
 ## Find the cert thumbprint for the client certificate created on the Ansible host
 $ansibleCert = Get-ChildItem -Path 'Cert:\LocalMachine\Root' | ? {$_.Subject -eq 'CN=ansibleuser'}
-New-Item -Path WSMan:\localhost\ClientCertificate `
-    -Subject "$UserAccountName@localhost" `
-    -URI * `
-    -Issuer $ansibleCert.Thumbprint `
-    -Credential $credential `
-    -Force
 
+$params = @{
+	Path = 'WSMan:\localhost\ClientCertificate'
+	Subject = "$UserAccountName@localhost"
+	URI = '*'
+	Issuer = $ansibleCert.Thumbprint
+  Credential = $credential
+	Force = $true
+}
+New-Item @params
 #endregion
 
 #region Ensure LocalAccountTokenFilterPolicy is set to 1
