@@ -56,9 +56,12 @@ $null = Import-Certificate -FilePath $pubKeyFilePath -CertStoreLocation 'Cert:\L
 $hostname = hostname
 $serverCert = New-SelfSignedCertificate -DnsName $hostName -CertStoreLocation 'Cert:\LocalMachine\My'
 
-#region Create an SSL listener with the server cert
+#region Find all HTTPS listners
 $httpsListeners = Get-ChildItem -Path WSMan:\localhost\Listener\ | where-object { $_.Keys -match 'Transport=HTTPS' }
 
+## If not listeners are defined at all or no listener is configured to work with
+## the server cert created, create a new one with a Subject of the computer's host name
+## and bound to the server certificate.
 if ((-not $httpsListeners) -or -not (@($httpsListeners).where( { $_.CertificateThumbprint -ne $serverCert.Thumbprint }))) {
     $newWsmanParams = @{
         ResourceUri = 'winrm/config/Listener'
